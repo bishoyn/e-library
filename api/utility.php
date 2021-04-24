@@ -1,8 +1,6 @@
 <?php
 require_once 'db/dbconnect.php';
 
-//test github update
-
 class Utility
 {
     public static function isempty()
