@@ -2,38 +2,21 @@
 require_once '../db/dbconnect.php';
 require_once '../utility.php';
 
+utility::checkHeaders("POST");
 
 
-if ($_SERVER["CONTENT_TYPE"] != "application/json") {
-    echo json_encode(["error" => 400, "message" => "header Content-Type should be application/json"]);
+
+$_POST = Utility::getHeaderData();
+$firstname = $_POST['firstname'];
+$lastname = $_POST['lastname'];
+$email = $_POST['email'];
+$password = $_POST['password'];
+
+//check if we have data then register
+if (!utility::isempty($firstname, $lastname, $email, $password)) {
+    echo register();
     exit();
 }
-
-if ($_SERVER['REQUEST_METHOD'] != 'POST') {
-    echo json_encode(["error" => 400, "message" => "access denied bad request type"]);
-    exit();
-}
-
-$json_params = file_get_contents("php://input");
-
-if (strlen($json_params) > 0 && utility::isValidJSON($json_params)) {
-    $_POST = json_decode($json_params, true);
-    $firstname = $_POST['firstname'];
-    $lastname = $_POST['lastname'];
-    $email = $_POST['email'];
-    $password = $_POST['password'];
-
-    //check if we have data then register
-    if (!utility::isempty($firstname, $lastname, $email, $password)) {
-        echo register();
-        exit();
-    }
-}
-
-echo json_encode(["error" => 400, "message" => "bad register info"]);
-exit();
-
-
 
 
 //register function
@@ -62,11 +45,11 @@ function register()
                 }
             }
 
-            return json_encode(["code" => 500, "error" => "database error", "message" => $mysqli->error]);
+            return json_encode(["error" => 500, "message" => $mysqli->error]);
         }
 
         return json_encode(["error" => 400, "message" => "user already exist", "data" => json_decode($existence)]);
     }
 
-    return json_encode(["error" => 400, "message" => "bad email format"]);
+    return json_encode(["error" => 401, "message" => "bad email format"]);
 }
