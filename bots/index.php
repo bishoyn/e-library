@@ -11,8 +11,6 @@ if ($mysqli -> connect_errno) {
   exit();
 }
 
-//test githup
-
 //loop throught folder
 if ($handle = opendir("corrupted")) {
   while (false !== ($file = readdir($handle))) {
