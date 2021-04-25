@@ -1,0 +1,157 @@
+<?php
+
+namespace Src\Api;
+
+header('Content-Type: application/json');
+
+
+class User
+{
+
+    public static function isUserExists($email)
+    {
+        require 'db/dbconnect.php';
+
+        $sql = "SELECT * FROM users where email = '$email'";
+        $result = $mysqli->query($sql);
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                return json_encode(["id" => $row["id"], "email" => $row["email"]]);
+            }
+        } else {
+            return false;
+        }
+
+        return false;
+    }
+
+
+    //register function
+    public static function register($firstname, $lastname, $email, $password)
+    {
+        require 'db/dbconnect.php';
+
+        if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $existence = self::isUserExists($email);
+            if (!$existence) {
+                $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+                $sql = "INSERT INTO users (email, password)  VALUES ('$email', '$hashed_password')";
+                $reg_result = $mysqli->query($sql);
+                if ($reg_result === true) {
+                    $user_id = $mysqli->insert_id;
+                    $sql = "INSERT INTO user_data (user_id, first_name, last_name, balance)  VALUES ('$user_id', '$firstname', '$lastname', 0.00)";
+                    $data_result = $mysqli->query($sql);
+                    if ($data_result === true) {
+                        return json_encode(["success" => true, "userdata" => [
+                            "id" => $user_id,
+                            "email" => $email,
+                            "firstname" => $firstname,
+                            "lastname" => $lastname,
+                            "balance" => 0.00,
+                        ]]);
+                    }
+                }
+
+                return json_encode(["error" => 500, "message" => $mysqli->error]);
+            }
+
+            return json_encode(["error" => 400, "message" => "user already exist", "data" => json_decode($existence)]);
+        }
+
+        return json_encode(["error" => 401, "message" => "bad email format"]);
+    }
+
+    //login function
+    public static function login($email, $password)
+    {
+        require 'db/dbconnect.php';
+
+        if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $sql = "SELECT * FROM users INNER JOIN user_data ON users.id = user_data.user_id WHERE users.email = '$email' ";
+
+            $result = $mysqli->query($sql);
+            if ($result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                    if (password_verify($password, $row["password"])) {
+                        unset($row["password"]);
+                        unset($row["user_id"]);
+                        return json_encode(["success" => true, "userdata" => $row]);
+                    }
+
+                    return json_encode(["error" => 401, "message" => "invalid password"]);
+                }
+            }
+
+            return json_encode(["error" => 404, "message" => "user not found"]);
+        }
+
+        return json_encode(["error" => 400, "message" => "bad email format"]);
+    }
+
+    //register a book to a user
+    public static function addUserBooks($user_id, $book_id)
+    {
+        require 'db/dbconnect.php';
+
+        //check if the user alreay has the boon in his library
+        $sql = "SELECT * FROM user_books where user_id = '$user_id' AND book_id = $book_id";
+        $result = $mysqli->query($sql);
+        if ($result->num_rows > 0) {
+            return json_encode(["error" => 422, "message" => "user already has this book in his library"]);
+        }
+
+        //get booke and user balance
+        $sql = "SELECT books.price, user_data.balance FROM books, user_data WHERE user_data.user_id = $user_id AND books.id = '$book_id'";
+        $balance_result = $mysqli->query($sql);
+        if ($balance_result->num_rows > 0) {
+            while ($row = $balance_result->fetch_assoc()) {
+                $user_balance = $row['balance'];
+                $book_price = $row['price'];
+
+                //check if user have enough balance
+                if ($user_balance >= $book_price) {
+                    //register this book to the user
+                    $new_user_balance = $user_balance - $book_price;
+                    $sql = "INSERT INTO user_books (user_id, book_id) VALUES ('$user_id', '$book_id');
+                            UPDATE user_data SET balance = $new_user_balance WHERE user_id = $user_id";
+                    //$purchase_result = $mysqli->query($sql);
+                    $purchase_result = mysqli_multi_query($mysqli, $sql);
+
+                    if ($purchase_result === true) {
+                        return json_encode(["success" => true, "message" => "user successfully purchased book: $book_id"]);
+                    }
+
+                    return json_encode(["error" => 500, "message" => $mysqli->error]);
+                }
+
+                return json_encode(["error" => 422, "message" => "user doesn't have enough balance"]);
+            }
+        }
+
+        return json_encode(["error" => 401, "message" => "user doesn't exist or book doesn't exist"]);
+    }
+
+    //get user books function
+    public static function getUserBooks($user_id)
+    {
+        require 'db/dbconnect.php';
+
+        $sql = "SELECT * FROM user_books INNER JOIN books ON user_books.book_id = books.id WHERE user_books.user_id = '$user_id'";
+
+        $result = $mysqli->query($sql);
+        $books = array();
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+
+                unset($row["user_id"]);
+                unset($row["id"]);
+
+                array_push($books, $row);
+            }
+
+            return html_entity_decode(json_encode(["success" => true, "user_id" => $user_id, "books" => $books]));
+        }
+
+        return json_encode(["error" => 404, "message" => "no books found"]);
+    }
+}

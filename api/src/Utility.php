@@ -1,5 +1,10 @@
 <?php
-require_once 'db/dbconnect.php';
+
+namespace Src;
+
+header('Content-Type: application/json');
+
+
 
 class Utility
 {
@@ -9,22 +14,6 @@ class Utility
             if (empty($arg) || !isset($arg))
                 return true;
         }
-        return false;
-    }
-
-    public static function isUserExists($email)
-    {
-        global $mysqli;
-        $sql = "SELECT * FROM users where email = '$email'";
-        $result = $mysqli->query($sql);
-        if ($result->num_rows > 0) {
-            while ($row = $result->fetch_assoc()) {
-                return json_encode(["id" => $row["id"], "email" => $row["email"]]);
-            }
-        } else {
-            return false;
-        }
-
         return false;
     }
 
@@ -53,7 +42,7 @@ class Utility
         if (strlen($json_params) > 0 && utility::isValidJSON($json_params)) {
             return json_decode($json_params, true);
         } else {
-            echo json_encode(["error" => 400, "message" => "bad register info"]);
+            echo json_encode(["error" => 400, "message" => "bad body info"]);
             exit();
         }
     }
