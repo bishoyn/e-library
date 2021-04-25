@@ -36,14 +36,16 @@ class Utility
         }
     }
 
-    public static function getHeaderData()
+    public static function getHeaderData($required = true)
     {
         $json_params = file_get_contents("php://input");
         if (strlen($json_params) > 0 && utility::isValidJSON($json_params)) {
             return json_decode($json_params, true);
         } else {
-            echo json_encode(["error" => 400, "message" => "bad body info"]);
-            exit();
+            if ($required) {
+                echo json_encode(["error" => 400, "message" => "bad body info"]);
+                exit();
+            }
         }
     }
 }

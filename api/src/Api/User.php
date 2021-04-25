@@ -189,8 +189,7 @@ class User
 
         //rate the book
         $sql = "INSERT INTO rating (user_id, book_id, rate) VALUES ($user_id, '$book_id', $rate)";
-        //$purchase_result = $mysqli->query($sql);
-        $rate_result = mysqli_multi_query($mysqli, $sql);
+        $rate_result = $mysqli->query($sql);
 
         if ($rate_result === true) {
             return json_encode(["success" => true, "message" => "user successfully rated book: $book_id"]);
