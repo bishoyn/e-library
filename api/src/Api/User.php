@@ -8,7 +8,7 @@ header('Content-Type: application/json');
 class User
 {
 
-    public static function isUserExists($email)
+    private static function isUserExists($email)
     {
         require 'db/dbconnect.php';
 
@@ -25,6 +25,21 @@ class User
         return false;
     }
 
+    private static function isUserHasBook($user_id, $book_id)
+    {
+        require 'db/dbconnect.php';
+
+
+        //check if the user alreay has the book in his library
+        $sql = "SELECT * FROM user_books where user_books.user_id = $user_id AND user_books.book_id = '$book_id'";
+        $result = $mysqli->query($sql);
+        if ($result->num_rows > 0) {
+
+            return true;
+        }
+
+        return false;
+    }
 
     //register function
     public static function register($firstname, $lastname, $email, $password)
@@ -93,10 +108,7 @@ class User
     {
         require 'db/dbconnect.php';
 
-        //check if the user alreay has the boon in his library
-        $sql = "SELECT * FROM user_books where user_id = '$user_id' AND book_id = $book_id";
-        $result = $mysqli->query($sql);
-        if ($result->num_rows > 0) {
+        if (self::isUserHasBook($user_id, $book_id)) {
             return json_encode(["error" => 422, "message" => "user already has this book in his library"]);
         }
 
@@ -112,7 +124,7 @@ class User
                 if ($user_balance >= $book_price) {
                     //register this book to the user
                     $new_user_balance = $user_balance - $book_price;
-                    $sql = "INSERT INTO user_books (user_id, book_id) VALUES ('$user_id', '$book_id');
+                    $sql = "INSERT INTO user_books (user_id, book_id) VALUES ($user_id, '$book_id');
                             UPDATE user_data SET balance = $new_user_balance WHERE user_id = $user_id";
                     //$purchase_result = $mysqli->query($sql);
                     $purchase_result = mysqli_multi_query($mysqli, $sql);
@@ -136,7 +148,7 @@ class User
     {
         require 'db/dbconnect.php';
 
-        $sql = "SELECT * FROM user_books INNER JOIN books ON user_books.book_id = books.id WHERE user_books.user_id = '$user_id'";
+        $sql = "SELECT * FROM user_books INNER JOIN books ON user_books.book_id = books.id WHERE user_books.user_id = $user_id";
 
         $result = $mysqli->query($sql);
         $books = array();
@@ -153,5 +165,39 @@ class User
         }
 
         return json_encode(["error" => 404, "message" => "no books found"]);
+    }
+
+    //add book rate
+    public static function rateBook($user_id, $book_id, $rate)
+    {
+        require 'db/dbconnect.php';
+
+        if ($rate <= 0 || $rate > 5) {
+            return json_encode(["error" => 422, "message" => "rate must be between 1-5"]);
+        }
+
+        if (!self::isUserHasBook($user_id, $book_id)) {
+            return json_encode(["error" => 422, "message" => "user doesn't have this book in his library"]);
+        }
+
+        //check if the user alreay has rated this book
+        $sql = "SELECT * FROM rating where rating.user_id = $user_id AND rating.book_id = '$book_id'";
+        $result = $mysqli->query($sql);
+        if ($result->num_rows > 0) {
+            return json_encode(["error" => 422, "message" => "user already rated this book"]);
+        }
+
+        //rate the book
+        $sql = "INSERT INTO rating (user_id, book_id, rate) VALUES ($user_id, '$book_id', $rate)";
+        //$purchase_result = $mysqli->query($sql);
+        $rate_result = mysqli_multi_query($mysqli, $sql);
+
+        if ($rate_result === true) {
+            return json_encode(["success" => true, "message" => "user successfully rated book: $book_id"]);
+        }
+
+        return json_encode(["error" => 500, "message" => $mysqli->error]);
+
+        return json_encode(["error" => 401, "message" => "user doesn't exist or book doesn't exist"]);
     }
 }

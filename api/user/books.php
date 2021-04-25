@@ -7,7 +7,6 @@ use Src\Utility;
 
 utility::checkHeaders("GET");
 
-//$_GET = Utility::getHeaderData();
 $user_id = $_GET['id'];
 
 //check if we have data
