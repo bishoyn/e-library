@@ -3,7 +3,7 @@
 ## User API
 
 ### Rigester
-```
+```JSON
 POST /api/user/register.php
 
 Headers
@@ -31,7 +31,7 @@ Example Response
 ```
 
 ### Login
-```
+```JSON
 POST /api/user/login.php
 
 Headers
@@ -57,7 +57,7 @@ Example Response
 ```
 
 ### Buy a Book
-```
+```JSON
 POST /api/user/register_book.php
 
 Headers
@@ -77,7 +77,7 @@ Example Response
 ```
 
 ### Get User Books
-```
+```JSON
 GET /user/books.php?id=1
 
 Headers
@@ -118,7 +118,7 @@ Example Response
 }
 ```
 ### User Rate a Book
-```
+```JSON
 POST /api/user/rate_book.php
 
 Headers
@@ -141,7 +141,7 @@ Example Response
 ```
 
 ### User Add funds
-```
+```JSON
 POST /api/user/funds.php
 
 Headers
@@ -164,7 +164,7 @@ Example Response
 ## Book API
 
 ### Get All Books
-```
+```JSON
 GET /book/getall.php?limit=2
 
 Headers
@@ -204,7 +204,7 @@ Example Response
 ```
 
 ### Get Book Rating
-```
+```JSON
 GET /api/book/rating.php?id=000636988X
 
 Headers
