@@ -152,8 +152,6 @@ Example Body
     "user_id":4,
     "amount": 30
 }
-
-Notes "rate" property must be between 1-5
  
 Example Response
 {
