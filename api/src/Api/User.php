@@ -143,6 +143,34 @@ class User
         return json_encode(["error" => 401, "message" => "user doesn't exist or book doesn't exist"]);
     }
 
+
+    public static function addFunds($user_id, $amount)
+    {
+        require 'db/dbconnect.php';
+
+        if (floatval($amount) <= 0) return json_encode(["error" => 422, "message" => "minimum amount of funds is $1"]);
+
+        //get current balance
+        $sql = "SELECT user_data.balance FROM user_data WHERE user_data.user_id = $user_id";
+        $balance_result = $mysqli->query($sql);
+        if ($balance_result->num_rows > 0) {
+            while ($row = $balance_result->fetch_assoc()) {
+                $user_balance = $row['balance'];
+                $new_balance = floatval($user_balance) + floatval($amount);
+                $sql = "UPDATE user_data SET balance = $new_balance WHERE user_id = $user_id";
+                $result = $mysqli->query($sql);
+                if ($result === true) {
+                    return json_encode(["success" => true, "message" => "funds added successfully"]);
+                }
+
+                return json_encode(["error" => 500, "message" => $mysqli->error]);
+            }
+        }
+
+        return json_encode(["error" => 404, "message" => "user doesn't exist"]);
+    }
+
+
     //get user books function
     public static function getUserBooks($user_id)
     {
