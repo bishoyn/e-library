@@ -2,7 +2,7 @@
 
 ## User API
 
-#### Base URL ``` https://joberapp.net/e-library/api ```
+#### Base URL ``` https://joberapp.net/e-library ```
 
 ### Rigester
 ```JSON
@@ -80,7 +80,7 @@ Example Response
 
 ### Get User Books
 ```JSON
-GET /user/books.php?id=1
+GET /api/user/books.php?id=1
 
 Headers
 Content-Type:application/json
@@ -167,7 +167,7 @@ Example Response
 
 ### Get All Books
 ```JSON
-GET /book/getall.php?limit=2
+GET /api/book/getall.php?limit=2
 
 Headers
 Content-Type:application/json
