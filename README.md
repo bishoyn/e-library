@@ -2,6 +2,8 @@
 
 ## User API
 
+###Base URL ``` https://joberapp.net/e-library/ ```
+
 ### Rigester
 ```JSON
 POST /api/user/register.php
