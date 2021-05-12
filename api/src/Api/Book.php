@@ -55,8 +55,7 @@ class Book
         $sql = "SELECT * FROM books WHERE books.id = '$book_id'";
 
         $result = $mysqli->query($sql);
-        $books = array();
-        if ($result->num_rows > 0) {
+        if ($row = $result->num_rows > 0) {
             return html_entity_decode(json_encode(["success" => true, "bookdata" => $row]));
         }
 
