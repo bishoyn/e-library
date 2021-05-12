@@ -204,6 +204,33 @@ Example Response
     ]
 }
 ```
+### Get Book By Id
+```JSON
+GET /api/book/book.php?id=000649840X
+
+Headers
+Content-Type:application/json
+
+Parameters
+id
+
+Example Response
+{
+    "success": true,
+    "bookdata": {
+        "id": "000649840X",
+        "title": "Angela's Ashes: A Memoir",
+        "category_name": "Biographies & Autobiographies",
+        "auther_name": "McCourt, Frank",
+        "language": "en_US",
+        "pages": "368",
+        "image": "assets/images/5.jpeg",
+        "price": "100.00"
+    }
+}
+```
+
+
 
 ### Get Book Rating
 ```JSON
