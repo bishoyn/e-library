@@ -25,10 +25,10 @@ class Utility
 
     public static function checkHeaders($method)
     {
-        if ($_SERVER["CONTENT_TYPE"] != "application/json") {
-            echo json_encode(["error" => 400, "message" => "header Content-Type should be application/json"]);
-            exit();
-        }
+        // if ($_SERVER["CONTENT_TYPE"] != "application/json") {
+        //     echo json_encode(["error" => 400, "message" => "header Content-Type should be application/json"]);
+        //     exit();
+        // }
 
         if ($_SERVER['REQUEST_METHOD'] != $method) {
             echo json_encode(["error" => 400, "message" => "access denied bad request type"]);
