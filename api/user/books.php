@@ -1,8 +1,11 @@
 <?php
+header('Access-Control-Allow-Origin: *');
+
 require '../vendor/autoload.php';
 
 use Src\Api\User;
 use Src\Utility;
+
 
 
 utility::checkHeaders("GET");
