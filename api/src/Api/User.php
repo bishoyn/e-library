@@ -109,7 +109,7 @@ class User
     {
         require 'db/dbconnect.php';
 
-        foreach ($book_id as $books) {
+        foreach ($books as $book_id) {
             if (self::isUserHasBook($user_id, $book_id)) {
                 return json_encode(["error" => 422, "message" => "user already has this book in his library"]);
             }
@@ -141,7 +141,7 @@ class User
             }
         }
 
-        return json_encode(["success" => 401, "message" => "user successfully purchased all books"]);
+        return json_encode(["success" => true, "message" => "user successfully purchased all books"]);
     }
 
 
