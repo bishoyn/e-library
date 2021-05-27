@@ -11,12 +11,12 @@ utility::checkHeaders("POST");
 
 $_POST = Utility::getHeaderData();
 $user_id = $_POST['user_id'];
-$book_id = $_POST['book_id'];
+$books = $_POST['books'];
 
 //check if we have data
 if (!utility::isempty($user_id, $book_id)) {
-    echo User::addUserBooks($user_id, $book_id);
+    echo User::addUserBooks($user_id, $books);
     exit();
 }
 
-echo json_encode(["error" => 400, "message" => "bad user id or book id"]);
+echo json_encode(["error" => 400, "message" => "bad user id or books data"]);

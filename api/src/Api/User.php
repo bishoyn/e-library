@@ -105,43 +105,43 @@ class User
     }
 
     //register a book to a user
-    public static function addUserBooks($user_id, $book_id)
+    public static function addUserBooks($user_id, $books)
     {
         require 'db/dbconnect.php';
 
-        if (self::isUserHasBook($user_id, $book_id)) {
-            return json_encode(["error" => 422, "message" => "user already has this book in his library"]);
-        }
+        foreach ($book_id as $books) {
+            if (self::isUserHasBook($user_id, $book_id)) {
+                return json_encode(["error" => 422, "message" => "user already has this book in his library"]);
+            }
 
-        //get booke and user balance
-        $sql = "SELECT books.price, user_data.balance FROM books, user_data WHERE user_data.user_id = $user_id AND books.id = '$book_id'";
-        $balance_result = $mysqli->query($sql);
-        if ($balance_result->num_rows > 0) {
-            while ($row = $balance_result->fetch_assoc()) {
-                $user_balance = $row['balance'];
-                $book_price = $row['price'];
+            //get booke and user balance
+            $sql = "SELECT books.price, user_data.balance FROM books, user_data WHERE user_data.user_id = $user_id AND books.id = '$book_id'";
+            $balance_result = $mysqli->query($sql);
+            if ($balance_result->num_rows > 0) {
+                while ($row = $balance_result->fetch_assoc()) {
+                    $user_balance = $row['balance'];
+                    $book_price = $row['price'];
 
-                //check if user have enough balance
-                if ($user_balance >= $book_price) {
-                    //register this book to the user
-                    $new_user_balance = $user_balance - $book_price;
-                    $sql = "INSERT INTO user_books (user_id, book_id) VALUES ($user_id, '$book_id');
-                            UPDATE user_data SET balance = $new_user_balance WHERE user_id = $user_id";
-                    //$purchase_result = $mysqli->query($sql);
-                    $purchase_result = mysqli_multi_query($mysqli, $sql);
+                    //check if user have enough balance
+                    if ($user_balance >= $book_price) {
+                        //register this book to the user
+                        $new_user_balance = $user_balance - $book_price;
+                        $sql = "INSERT INTO user_books (user_id, book_id) VALUES ($user_id, '$book_id');
+                                UPDATE user_data SET balance = $new_user_balance WHERE user_id = $user_id";
+                        //$purchase_result = $mysqli->query($sql);
+                        $purchase_result = mysqli_multi_query($mysqli, $sql);
 
-                    if ($purchase_result === true) {
-                        return json_encode(["success" => true, "message" => "user successfully purchased book: $book_id"]);
+                        if ($purchase_result !== true) {
+                            return json_encode(["error" => 500, "message" => $mysqli->error]);
+                        }
+                    } else {
+                        return json_encode(["error" => 422, "message" => "user doesn't have enough balance to buy this boox $book_id"]);
                     }
-
-                    return json_encode(["error" => 500, "message" => $mysqli->error]);
                 }
-
-                return json_encode(["error" => 422, "message" => "user doesn't have enough balance"]);
             }
         }
 
-        return json_encode(["error" => 401, "message" => "user doesn't exist or book doesn't exist"]);
+        return json_encode(["success" => 401, "message" => "user successfully purchased all books"]);
     }
 
 
