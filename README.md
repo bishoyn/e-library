@@ -58,7 +58,7 @@ Example Response
 }
 ```
 
-### Buy a Book
+### Buy Books
 ```JSON
 POST /user/register_book.php
 
@@ -68,13 +68,13 @@ Content-Type:application/json
 Example Body
 {
     "user_id":4,
-    "book_id":"000636988X"
+    "books": ["000636988X", "0060094850"]
 }
 
 Example Response
 {
     "success": true,
-    "message": "user successfully purchased book: 000636988X"
+    "message": "user successfully purchased all books"
 }
 ```
 
