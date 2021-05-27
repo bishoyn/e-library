@@ -141,7 +141,7 @@ class User
                 }
             }
 
-            sleep(0.3);
+            sleep(0.5);
         }
 
         return json_encode(["success" => true, "message" => "user successfully purchased all books"]);
