@@ -111,7 +111,7 @@ class User
 
         foreach ($books as $book_id) {
             if (self::isUserHasBook($user_id, $book_id)) {
-                return json_encode(["error" => 422, "message" => "user already has this book in his library"]);
+                return json_encode(["error" => 422, "message" => "user already has this book in his library $book_id"]);
             }
 
             //get booke and user balance
