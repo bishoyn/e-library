@@ -35,7 +35,6 @@ class User
         $sql = "SELECT * FROM user_books where user_books.user_id = $user_id AND user_books.book_id = '$book_id'";
         $result = $mysqli->query($sql);
         if ($result->num_rows > 0) {
-
             return true;
         }
 
@@ -110,6 +109,8 @@ class User
         require 'db/dbconnect.php';
 
         foreach ($books as $book_id) {
+            echo $book_id . "\n\n";
+
             if (self::isUserHasBook($user_id, $book_id)) {
                 return json_encode(["error" => 422, "message" => "user already has this book in his library $book_id"]);
             }
