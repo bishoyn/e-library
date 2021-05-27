@@ -140,6 +140,8 @@ class User
                     }
                 }
             }
+
+            sleep(0.3);
         }
 
         return json_encode(["success" => true, "message" => "user successfully purchased all books"]);
