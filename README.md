@@ -2,11 +2,11 @@
 
 ## User API
 
-#### Base URL ``` https://joberapp.net/e-library ```
+#### Base URL ``` https://joberapp.net/e-library/api ```
 
 ### Rigester
 ```JSON
-POST /api/user/register.php
+POST /user/register.php
 
 Headers
 Content-Type:application/json
@@ -34,7 +34,7 @@ Example Response
 
 ### Login
 ```JSON
-POST /api/user/login.php
+POST /user/login.php
 
 Headers
 Content-Type:application/json
@@ -60,7 +60,7 @@ Example Response
 
 ### Buy a Book
 ```JSON
-POST /api/user/register_book.php
+POST /user/register_book.php
 
 Headers
 Content-Type:application/json
@@ -80,7 +80,7 @@ Example Response
 
 ### Get User Books
 ```JSON
-GET /api/user/books.php?id=1
+GET /user/books.php?id=1
 
 Headers
 Content-Type:application/json
@@ -121,7 +121,7 @@ Example Response
 ```
 ### User Rate a Book
 ```JSON
-POST /api/user/rate_book.php
+POST /user/rate_book.php
 
 Headers
 Content-Type:application/json
@@ -144,7 +144,7 @@ Example Response
 
 ### User Add funds
 ```JSON
-POST /api/user/funds.php
+POST /user/funds.php
 
 Headers
 Content-Type:application/json
@@ -167,7 +167,7 @@ Example Response
 
 ### Get All Books
 ```JSON
-GET /api/book/getall.php?limit=2
+GET /book/getall.php?limit=2
 
 Headers
 Content-Type:application/json
@@ -206,7 +206,7 @@ Example Response
 ```
 ### Get Book By Id
 ```JSON
-GET /api/book/book.php?id=000649840X
+GET /book/book.php?id=000649840X
 
 Headers
 Content-Type:application/json
@@ -234,7 +234,7 @@ Example Response
 
 ### Get Book Rating
 ```JSON
-GET /api/book/rating.php?id=000636988X
+GET /book/rating.php?id=000636988X
 
 Headers
 Content-Type:application/json
