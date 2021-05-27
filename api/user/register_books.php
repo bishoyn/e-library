@@ -14,7 +14,7 @@ $user_id = $_POST['user_id'];
 $books = $_POST['books'];
 
 //check if we have data
-if (!utility::isempty($user_id, $book_id)) {
+if (!utility::isempty($user_id, $books)) {
     echo User::addUserBooks($user_id, $books);
     exit();
 }
