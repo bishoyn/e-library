@@ -60,7 +60,7 @@ Example Response
 
 ### Buy Books
 ```JSON
-POST /user/register_book.php
+POST /user/register_books.php
 
 Headers
 Content-Type:application/json
