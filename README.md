@@ -119,6 +119,7 @@ Example Response
     ]
 }
 ```
+
 ### User Rate a Book
 ```JSON
 POST /user/rate_book.php
@@ -161,6 +162,7 @@ Example Response
     "message": "funds added successfully"
 }
 ```
+
 ### Get User Balance
 ```JSON
 GET /user/get_balance.php?id=1
@@ -178,7 +180,7 @@ Example Response
     "user_id": "1",
     "balance": "2887.00"
 }
-
+```
 
 ## Book API
 
@@ -221,6 +223,7 @@ Example Response
     ]
 }
 ```
+
 ### Get Book By Id
 ```JSON
 GET /book/book.php?id=000649840X
@@ -246,8 +249,6 @@ Example Response
     }
 }
 ```
-
-
 
 ### Get Book Rating
 ```JSON
