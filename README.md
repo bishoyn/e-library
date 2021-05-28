@@ -161,6 +161,23 @@ Example Response
     "message": "funds added successfully"
 }
 ```
+### Get User Balance
+```JSON
+GET /user/get_balance.php?id=1
+
+Headers
+Content-Type:application/json
+
+Parameters
+id
+
+
+Example Response
+{
+    "success": true,
+    "user_id": "1",
+    "balance": "2887.00"
+}
 
 
 ## Book API
