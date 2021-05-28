@@ -214,6 +214,26 @@ class User
         return json_encode(["error" => 404, "message" => "no books found"]);
     }
 
+    //get user balance function
+    public static function getUserBalance($user_id)
+    {
+        require 'db/dbconnect.php';
+
+        $sql = "SELECT * FROM user_data WHERE user_data.user_id = $user_id";
+
+        $result = $mysqli->query($sql);
+        $books = array();
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+
+
+                return html_entity_decode(json_encode(["success" => true, "user_id" => $user_id, "balance" => $row["balance"]]));
+            }
+        }
+
+        return json_encode(["error" => 404, "message" => "user doesn't exist"]);
+    }
+
     //add book rate
     public static function rateBook($user_id, $book_id, $rate)
     {
